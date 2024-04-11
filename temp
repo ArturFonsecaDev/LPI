@@ -1,0 +1,11 @@
+cabecalho = 'Lista de Jogadores:\nNome | Rating | Título | Estrangeiro'
+inserir_jogador(Jogador('Rafael Correa Viana',1900, 'cm', False))
+inserir_jogador(Jogador('Magnus Carlsen', 2862, 'gm', True))
+inserir_jogador(Jogador('Paulo Fonseca', 2400, 'IM', False))
+inserir_jogador(Jogador('Artur Fonseca', 2100, 'fm', False))
+inserir_jogador(Jogador('Sara meu amor', 400, 'c', True))
+lista, filtro = seleciona_jogadores()
+mostrar_objetos(cabecalho, lista, filtro)
+print('\n')
+lista, filtro = seleciona_jogadores(titulo_fide_min='IM')
+mostrar_objetos(cabecalho, lista, filtro)

@@ -1,59 +1,103 @@
+from util.gerais import mostrar_objetos
 
 class Jogador:
     def __init__(self, nome, rating_atual, titulo_fide=None, estrangeiro=False):
         self.nome = nome
         self.rating_atual = rating_atual
-        self.titulo_fide = titulo_fide if titulo_fide in {
-            'CM', 'FM', 'IM', 'GM'} else 'Sem Título'
+        self.titulo_fide = titulo_fide
         self.estrangeiro = estrangeiro
 
     def __str__(self):
-        formato = '{:<20} | {:<4} | {:<3} | {:<3} |'
+        formato = '{:<20} | {:<4} | {:^3} | {:^5} |'
         return formato.format(self.nome, self.rating_atual, self.titulo_fide, 'Sim' if self.estrangeiro else 'Não')
 
+    @property
+    def titulo_fide(self):
+        return self._titulo_fide
+
+    @titulo_fide.setter
+    def titulo_fide(self, new_value):
+        if not isinstance(new_value, str):
+            self._titulo_fide = '--'
+            return
+        new_value_upper = new_value.upper()
+        if new_value_upper in {'CM', 'GM'}:
+            self._titulo_fide = new_value_upper
+            return
+        sorted_value = ''.join(sorted(new_value_upper))
+        if sorted_value in {'IM', 'FM'}:
+            self._titulo_fide = new_value_upper
+        else:
+            self._titulo_fide = '--'
 
 
 jogadores = []
 
 
-def get_jogadores():
+def obter_jogadores():
     return jogadores
 
 
-def set_jogador(jogador):
+def inserir_jogador(jogador):
     jogadores.append(jogador)
 
 
-def filtrar_por_rating(jogador, rating_minimo):
+def _filtrar_por_rating(jogador, rating_minimo):
     return rating_minimo is None or jogador.rating_atual >= rating_minimo
 
 
-def filtrar_por_prefixo_nome(jogador, prefixo_nome):
+def _filtrar_por_prefixo_nome(jogador, prefixo_nome):
     return prefixo_nome is None or jogador.nome.startswith(prefixo_nome)
 
 
-def filtrar_por_titulo_fide(jogador, titulo_fide_min):
-    if titulo_fide_min is None:
+def _filtrar_por_titulo_fide(jogador, titulo_fide_minimo):
+    if titulo_fide_minimo is None:
         return True
     titulo_numerico = {'Sem Título': 0, 'CM': 1, 'FM': 2, 'IM': 3, 'GM': 4}
     jogador_titulo_numerico = titulo_numerico.get(jogador.titulo_fide, 0)
-    return jogador_titulo_numerico >= titulo_numerico.get(titulo_fide_min, 0)
+    return jogador_titulo_numerico >= titulo_numerico.get(titulo_fide_minimo, 0)
 
 
-def filtrar_por_estrangeiro(jogador, estrangeiro):
+def _filtrar_por_estrangeiro(jogador, estrangeiro):
     return estrangeiro is None or jogador.estrangeiro == estrangeiro
+
+
+def _adicionar_filtros(prefixo_nome=None, rating_minimo=None, titulo_fide_min=None, estrangeiro=None):
+    str_filtros = 'Filtros -- '
+    if prefixo_nome is not None: str_filtros += 'Prefixo Nome '
+    if rating_minimo is not None: str_filtros += 'Mínimo de Rating '
+    if titulo_fide_min is not None: str_filtros += 'Título Fide Mínimo '
+    if estrangeiro is not None: str_filtros += 'Estrangeiro '
+    return str_filtros
 
 
 def seleciona_jogadores(prefixo_nome=None, rating_minimo=None, titulo_fide_min=None, estrangeiro=None):
     jogadores_selecionados = []
+    str_filtros = _adicionar_filtros(prefixo_nome, rating_minimo, titulo_fide_min, estrangeiro)
     filtros = [
-        lambda jogador: filtrar_por_rating(jogador, rating_minimo),
-        lambda jogador: filtrar_por_prefixo_nome(jogador, prefixo_nome),
-        lambda jogador: filtrar_por_titulo_fide(jogador, titulo_fide_min),
-        lambda jogador: filtrar_por_estrangeiro(jogador, estrangeiro)
+        lambda jogador: _filtrar_por_rating(jogador, rating_minimo),
+        lambda jogador: _filtrar_por_prefixo_nome(jogador, prefixo_nome),
+        lambda jogador: _filtrar_por_titulo_fide(jogador, titulo_fide_min),
+        lambda jogador: _filtrar_por_estrangeiro(jogador, estrangeiro)
     ]
     for jogador in jogadores:
         if all(filtro(jogador) for filtro in filtros):
             jogadores_selecionados.append(jogador)
+    return jogadores_selecionados, str_filtros
+
+
+if __name__ == '__main__':
+    cabecalho = 'Lista de Jogadores:\nNome | Rating | Título | Estrangeiro'
+    inserir_jogador(Jogador('Rafael Correa Viana', 1900, 'cm', False))
+    inserir_jogador(Jogador('Magnus Carlsen', 2862, 'gm', True))
+    inserir_jogador(Jogador('Paulo Fonseca', 2400, 'IM', False))
+    inserir_jogador(Jogador('Artur Fonseca', 2100, 'fm', False))
+    inserir_jogador(Jogador('Sara meu amor', 400, 'c', True))
+    lista, filtro = seleciona_jogadores()
+    mostrar_objetos(cabecalho, lista, filtro)
+    print('\n')
+    lista, filtro = seleciona_jogadores(titulo_fide_min='IM')
+    mostrar_objetos(cabecalho, lista, filtro)
+
 
 
