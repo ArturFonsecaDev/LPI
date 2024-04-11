@@ -6,7 +6,8 @@ def mostrar_objeto(indice, objeto) -> None:
 
 
 def mostrar_objetos(cabecalho, lista, filtros=None) -> None:
-    if filtros is not None: print(filtros)
+    if filtros is not None:
+        print(filtros)
     print(cabecalho)
     for indice, objeto in enumerate(lista):
         mostrar_objeto(indice, str(objeto))
