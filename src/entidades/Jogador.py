@@ -26,7 +26,7 @@ class Jogador:
             return
         sorted_value = ''.join(sorted(new_value_upper))
         if sorted_value in {'IM', 'FM'}:
-            self._titulo_fide = new_value_upper
+            self._titulo_fide = new_value_upper[::-1]
         else:
             self._titulo_fide = '--'
 
@@ -87,11 +87,11 @@ def seleciona_jogadores(prefixo_nome=None, rating_minimo=None, titulo_fide_min=N
 
 
 if __name__ == '__main__':
-    cabecalho = 'Lista de Jogadores:\nNome | Rating | Título | Estrangeiro'
+    cabecalho = 'Lista de Jogadores:\nOrdem | Nome | Rating | Título | Estrangeiro'
     inserir_jogador(Jogador('Rafael Correa Viana', 1900, 'cm', False))
     inserir_jogador(Jogador('Magnus Carlsen', 2862, 'gm', True))
     inserir_jogador(Jogador('Paulo Fonseca', 2400, 'IM', False))
-    inserir_jogador(Jogador('Artur Fonseca', 2100, 'fm', False))
+    inserir_jogador(Jogador('Artur Fonseca', 2100, 'mf', False))
     inserir_jogador(Jogador('Sara meu amor', 400, 'c', True))
     lista, filtro = seleciona_jogadores()
     mostrar_objetos(cabecalho, lista, filtro)
