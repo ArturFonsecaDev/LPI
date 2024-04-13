@@ -5,7 +5,10 @@ class Jogador:
     def __init__(self, nome, rating_atual, estrangeiro=False):
         self.nome = nome
         self.rating_atual = rating_atual
+        # Setter faz a atribuição correta de self.titulo_fide
+        # com base na variável rating_atual
         self.titulo_fide = ''
+        # fim do comentário
         self.estrangeiro = estrangeiro
 
     def __str__(self):
@@ -16,7 +19,7 @@ class Jogador:
     def titulo_fide(self):
         return self._titulo_fide
 
-
+    # Setter responsável pela atribuição e validação do self.titulo_fide
     @titulo_fide.setter
     def titulo_fide(self, new_value):
         if self.rating_atual >= 2500:
@@ -41,22 +44,53 @@ jogadores = []
 
 
 def obter_jogadores():
+    """
+    Retorna uma lista contendo todos os jogadores inseridos
+    pela função inserir_jogadores().
+    :return:
+    """
     return jogadores
 
 
 def inserir_jogador(jogador):
+    """
+    Insere um jogador numa lista.
+    A lista deve ser recuperada a partir da função obter_jogadores()
+    :param jogador:
+    """
     jogadores.append(jogador)
 
 
 def _filtrar_por_rating(jogador, rating_minimo):
+    """
+        Função para uso interno ajudando o funcionamento da função seleciona jogadores.
+        Não é necessário utilizar.
+        :param jogador:
+        :param rating_minimo:
+        :return:
+        """
     return rating_minimo is None or jogador.rating_atual >= rating_minimo
 
 
 def _filtrar_por_prefixo_nome(jogador, prefixo_nome):
+    """
+        Função para uso interno ajudando o funcionamento da função seleciona jogadores.
+        Não é necessário utilizar.
+        :param jogador:
+        :param prefixo_nome:
+        :return:
+        """
     return prefixo_nome is None or jogador.nome.startswith(prefixo_nome)
 
 
 def _filtrar_por_titulo_fide(jogador, titulo_fide_minimo):
+    """
+        Função para uso interno ajudando o funcionamento da função seleciona jogadores.
+        Não é necessário utilizar.
+        :param jogador:
+        :param titulo_fide_minimo:
+        :return:
+        """
     if titulo_fide_minimo is None:
         return True
     titulo_numerico = {'Sem Título': 0, 'CM': 1, 'FM': 2, 'IM': 3, 'GM': 4}
@@ -65,10 +99,26 @@ def _filtrar_por_titulo_fide(jogador, titulo_fide_minimo):
 
 
 def _filtrar_por_estrangeiro(jogador, estrangeiro):
+    """
+    Função para uso interno ajudando o funcionamento da função seleciona jogadores.
+    Não é necessário utilizar.
+    :param jogador:
+    :param estrangeiro:
+    :return:
+    """
     return estrangeiro is None or jogador.estrangeiro == estrangeiro
 
 
 def _adicionar_filtros(prefixo_nome=None, rating_minimo=None, titulo_fide_min=None, estrangeiro=None):
+    """
+    Função para uso interno ajudando o funcionamento da função seleciona jogadores.
+    Não é necessário utilizar.
+    :param prefixo_nome:
+    :param rating_minimo:
+    :param titulo_fide_min:
+    :param estrangeiro:
+    :return:
+    """
     filtros_dict = {
         'Prefixo Nome': prefixo_nome,
         'Mínimo de Rating': rating_minimo,
@@ -82,7 +132,17 @@ def _adicionar_filtros(prefixo_nome=None, rating_minimo=None, titulo_fide_min=No
     return str_filtros.rstrip('--')
 
 
-def seleciona_jogadores(prefixo_nome=None, rating_minimo=None, titulo_fide_min=None, estrangeiro=None):
+def seleciona_jogadores(prefixo_nome: str = None, rating_minimo: int = None,
+                        titulo_fide_min: str = None, estrangeiro: bool = None) -> list and str:
+    """
+    Retorna uma lista de jogadores com base nos parâmetros definidos.
+    Deve ser utilizada em conjunto com a função inserir_jogador() e obter_jogador()
+    :param prefixo_nome:
+    :param rating_minimo:
+    :param titulo_fide_min:
+    :param estrangeiro:
+    :return:
+    """
     jogadores_selecionados = []
     str_filtros = _adicionar_filtros(prefixo_nome, rating_minimo, titulo_fide_min, estrangeiro)
     filtros = [
@@ -97,8 +157,6 @@ def seleciona_jogadores(prefixo_nome=None, rating_minimo=None, titulo_fide_min=N
     return jogadores_selecionados, str_filtros
 
 
-
-
 if __name__ == '__main__':
     cabecalho = 'Lista de Jogadores:\nOrdem | Nome | Rating | Título | Estrangeiro'
     inserir_jogador(Jogador('Rafael Correa Viana', 1900, False ))
@@ -111,7 +169,3 @@ if __name__ == '__main__':
     print('\n')
     lista, filtro = seleciona_jogadores(titulo_fide_min='IM', rating_minimo=2000)
     mostrar_objetos(cabecalho, lista, filtro)
-
-
-
-

@@ -1,5 +1,5 @@
 from util.gerais import mostrar_objetos
-from random import randint
+
 
 class OrganizacaoRating:
 
@@ -7,7 +7,6 @@ class OrganizacaoRating:
         self.nome = nome
         self.cidade = cidade
         self.unidade_federativa = unidade_federativa
-        self.id = id
 
     def __str__(self):
         formato = '{:^6} | {:^20} | {:^4}'
