@@ -1,10 +1,11 @@
 from util.gerais import mostrar_objetos
 
+
 class Jogador:
-    def __init__(self, nome, rating_atual, titulo_fide=None, estrangeiro=False):
+    def __init__(self, nome, rating_atual, estrangeiro=False):
         self.nome = nome
         self.rating_atual = rating_atual
-        self.titulo_fide = titulo_fide
+        self.titulo_fide = ''
         self.estrangeiro = estrangeiro
 
     def __str__(self):
@@ -15,20 +16,24 @@ class Jogador:
     def titulo_fide(self):
         return self._titulo_fide
 
+
     @titulo_fide.setter
     def titulo_fide(self, new_value):
-        if not isinstance(new_value, str):
-            self._titulo_fide = '--'
+        if self.rating_atual >= 2500:
+            self._titulo_fide = 'GM'
             return
-        new_value_upper = new_value.upper()
-        if new_value_upper in {'CM', 'GM'}:
-            self._titulo_fide = new_value_upper
+        if self.rating_atual >= 2400:
+            self._titulo_fide = 'IM'
             return
-        sorted_value = ''.join(sorted(new_value_upper))
-        if sorted_value in {'IM', 'FM'}:
-            self._titulo_fide = sorted_value
-        else:
-            self._titulo_fide = '--'
+        if self.rating_atual >= 2300:
+            self._titulo_fide = 'FM'
+            return
+        if self.rating_atual >= 2100:
+            self._titulo_fide = 'CM'
+            return
+        self._titulo_fide = '--'
+
+
 # fim da classe
 
 
@@ -64,12 +69,17 @@ def _filtrar_por_estrangeiro(jogador, estrangeiro):
 
 
 def _adicionar_filtros(prefixo_nome=None, rating_minimo=None, titulo_fide_min=None, estrangeiro=None):
+    filtros_dict = {
+        'Prefixo Nome': prefixo_nome,
+        'Mínimo de Rating': rating_minimo,
+        'Título Fide Mínimo': titulo_fide_min,
+        'Estrangeiro': estrangeiro
+    }
     str_filtros = 'Filtros -- '
-    if prefixo_nome is not None: str_filtros += ' Prefixo Nome --'
-    if rating_minimo is not None: str_filtros += ' Mínimo de Rating --'
-    if titulo_fide_min is not None: str_filtros += ' Título Fide Mínimo --'
-    if estrangeiro is not None: str_filtros += ' Estrangeiro --'
-    return str_filtros
+    for filtro, valor in filtros_dict.items():
+        if valor is not None:
+            str_filtros += f' {filtro}: {valor} -- '
+    return str_filtros.rstrip('--')
 
 
 def seleciona_jogadores(prefixo_nome=None, rating_minimo=None, titulo_fide_min=None, estrangeiro=None):
@@ -87,18 +97,21 @@ def seleciona_jogadores(prefixo_nome=None, rating_minimo=None, titulo_fide_min=N
     return jogadores_selecionados, str_filtros
 
 
+
+
 if __name__ == '__main__':
     cabecalho = 'Lista de Jogadores:\nOrdem | Nome | Rating | Título | Estrangeiro'
-    inserir_jogador(Jogador('Rafael Correa Viana', 1900, 'cm', False))
-    inserir_jogador(Jogador('Magnus Carlsen', 2862, 'gm', True))
-    inserir_jogador(Jogador('Paulo Fonseca', 2400, 'IM', False))
-    inserir_jogador(Jogador('Artur Fonseca', 2100, 'mf', False))
-    inserir_jogador(Jogador('Sara meu amor', 400, 'l', True))
+    inserir_jogador(Jogador('Rafael Correa Viana', 1900, False ))
+    inserir_jogador(Jogador('Magnus Carlsen', 2862,  True))
+    inserir_jogador(Jogador('Paulo Fonseca', 2400,  False))
+    inserir_jogador(Jogador('Artur Fonseca', 2100, False))
+    inserir_jogador(Jogador('Sara meu amor', 2000, True))
     lista, filtro = seleciona_jogadores()
     mostrar_objetos(cabecalho, lista, filtro)
     print('\n')
     lista, filtro = seleciona_jogadores(titulo_fide_min='IM', rating_minimo=2000)
     mostrar_objetos(cabecalho, lista, filtro)
+
 
 
 
