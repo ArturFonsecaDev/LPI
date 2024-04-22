@@ -12,8 +12,9 @@ class Jogador:
         self.estrangeiro = estrangeiro
 
     def __str__(self):
-        formato = '{:<20} | {:<4} | {:^3} | {:^5} |'
-        return formato.format(self.nome, self.rating_atual, self.titulo_fide, 'Sim' if self.estrangeiro else 'Não')
+        formato = '{:<20} | {:<4} | {:^3} | {:^14} |'
+        return formato.format(self.nome, self.rating_atual, self.titulo_fide
+        , 'Estrangeiro' if self.estrangeiro else '---')
 
     @property
     def titulo_fide(self):
@@ -109,7 +110,7 @@ def _filtrar_por_estrangeiro(jogador, estrangeiro):
     return estrangeiro is None or jogador.estrangeiro == estrangeiro
 
 
-def _adicionar_filtros(prefixo_nome=None, rating_minimo=None, titulo_fide_min=None, estrangeiro=None):
+def _adicionar_filtro(prefixo_nome=None, rating_minimo=None, titulo_fide_min=None, estrangeiro=None):
     """
     Função para uso interno ajudando o funcionamento da função seleciona jogadores.
     Não é necessário utilizar.
@@ -129,11 +130,11 @@ def _adicionar_filtros(prefixo_nome=None, rating_minimo=None, titulo_fide_min=No
     for filtro, valor in filtros_dict.items():
         if valor is not None:
             str_filtros += f' {filtro}: {valor} -- '
-    return str_filtros.rstrip('--')
+    return str_filtros.rstrip(' --')
 
 
-def seleciona_jogadores(prefixo_nome: str = None, rating_minimo: int = None,
-                        titulo_fide_min: str = None, estrangeiro: bool = None) -> list and str:
+def selecionar_jogadores(prefixo_nome: str = None, rating_minimo: int = None,
+                         titulo_fide_min: str = None, estrangeiro: bool = None) -> list and str:
     """
     Retorna uma lista de jogadores com base nos parâmetros definidos.
     Deve ser utilizada em conjunto com a função inserir_jogador() e obter_jogador()
@@ -144,7 +145,7 @@ def seleciona_jogadores(prefixo_nome: str = None, rating_minimo: int = None,
     :return:
     """
     jogadores_selecionados = []
-    str_filtros = _adicionar_filtros(prefixo_nome, rating_minimo, titulo_fide_min, estrangeiro)
+    str_filtros = _adicionar_filtro(prefixo_nome, rating_minimo, titulo_fide_min, estrangeiro)
     filtros = [
         lambda jogador: _filtrar_por_rating(jogador, rating_minimo),
         lambda jogador: _filtrar_por_prefixo_nome(jogador, prefixo_nome),
@@ -158,14 +159,17 @@ def seleciona_jogadores(prefixo_nome: str = None, rating_minimo: int = None,
 
 
 if __name__ == '__main__':
-    cabecalho = 'Lista de Jogadores:\nOrdem | Nome | Rating | Título | Estrangeiro'
-    inserir_jogador(Jogador('Rafael Correa Viana', 1900, False ))
+    cabecalho = 'Lista de Jogadores: Nome | Rating | Título | Estrangeiro'
+    inserir_jogador(Jogador(nome='Rafael Correa Viana', rating_atual=2435, estrangeiro=False ))
     inserir_jogador(Jogador('Magnus Carlsen', 2862,  True))
-    inserir_jogador(Jogador('Paulo Fonseca', 2400,  False))
-    inserir_jogador(Jogador('Artur Fonseca', 2100, False))
-    inserir_jogador(Jogador('Sara meu amor', 2000, True))
-    lista, filtro = seleciona_jogadores()
-    mostrar_objetos(cabecalho, lista, filtro)
+    inserir_jogador(Jogador('Paulo Fonseca', 1850,  False))
+    inserir_jogador(Jogador('Artur Fonseca', 2700, False))
+    inserir_jogador(Jogador('Sara Sakai', 2000, True))
+    inserir_jogador(Jogador('Tigran Petrosian', 2652, True))
+    inserir_jogador(Jogador('Mikhail Tal', 2700, True))
+    inserir_jogador(Jogador('Hikaru Nakamura', 2795, True))
+    lista, filtro = selecionar_jogadores()
+    mostrar_objetos(cabecalho=cabecalho, lista=lista, filtros=filtro)
     print('\n')
-    lista, filtro = seleciona_jogadores(titulo_fide_min='IM', rating_minimo=2000)
+    lista, filtro = selecionar_jogadores(rating_minimo=1900, titulo_fide_min='GM', estrangeiro=True, prefixo_nome='H')
     mostrar_objetos(cabecalho, lista, filtro)

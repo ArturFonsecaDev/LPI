@@ -9,13 +9,15 @@ class OrganizacaoRating:
         self.unidade_federativa = unidade_federativa
 
     def __str__(self):
-        formato = '{:^6} | {:^20} | {:^4}'
-        return formato.format(self.nome, self.cidade, self.unidade_federativa)
+        formato = '{:^6} | {:^4} | {:<20}'
+        return formato.format(self.nome, self.unidade_federativa, self.cidade)
 
+    # getter para a variável nome
     @property
     def nome(self):
         return self._nome
 
+    # setter responsável por garantir que o nome da organização esteja dentro das existentes
     @nome.setter
     def nome(self, new_value):
         new_value_upper = new_value.upper()
@@ -28,6 +30,8 @@ class OrganizacaoRating:
     def unidade_federativa(self):
         return self._unidade_federativa
 
+    # setter responsável por garantir que a self.unidade_federativa esteja
+    # entre as ufs existentes, e se existir, converte para maiúscula
     @unidade_federativa.setter
     def unidade_federativa(self, new_value):
         new_value_upper = new_value.upper()
@@ -45,34 +49,63 @@ class OrganizacaoRating:
         self._unidade_federativa = '--'
 
 
-lista_organizacoes = []
+organizacoes = []
 
 
 def obter_orgarnizacoes():
-    return lista_organizacoes
+    return organizacoes
 
 
 def inserir_organizacoes(organizacao):
-    lista_organizacoes.append(organizacao)
+    organizacoes.append(organizacao)
 
 
 def _filtrar_por_estado(organizacao, uf_filtro):
+    """
+    Função para uso interno ajudando o funcionamento da função
+    seleciona_organizações. Não é necessário utilizar
+    :param organizacao:
+    :param uf_filtro:
+    :return:
+    """
     return uf_filtro is None or organizacao.unidade_federativa == uf_filtro
 
 
 def _filtrar_por_cidade(organizacao, cidade_filtro):
+    '''
+    Função para uso interno ajudando o funcionamento da função
+    seleciona_organizações. Não é necessário utilizar
+    :param organizacao:
+    :param cidade_filtro:
+    :return:
+    '''
     return cidade_filtro is None or organizacao.cidade == cidade_filtro
 
 
 def _filtrar_por_nome(organizacao, nome_filtro):
+    '''
+    Função para uso interno ajudando o funcionamento da função
+    seleciona_organizações. Não é necessário utilizar
+    :param organizacao:
+    :param nome_filtro:
+    :return:
+    '''
     return nome_filtro is None or organizacao.nome == nome_filtro
 
 
 def _adicionar_filtros(nome=None, unidade_federativa=None, cidade=None):
+    '''
+    Função para uso interno ajudando o funcionamento da função
+    seleciona_organizações. Não é necessário utilizar
+    :param nome:
+    :param unidade_federativa:
+    :param cidade:
+    :return:
+    '''
     filtros_dict = {
-        'nome': nome,
-        'unidade_federativa': unidade_federativa,
-        'cidade': cidade
+        'Nome': nome,
+        'Unidade Federativa': unidade_federativa,
+        'Cidade': cidade
     }
     str_filtros = 'Filtros -- '
     for key, filtro in filtros_dict.items():
@@ -95,14 +128,14 @@ def selecionar_organizacoes(nome=None, unidade_federativa=None, cidade=None):
             organizacao=organizacao,
             nome_filtro=nome)
     ]
-    for organizacao in lista_organizacoes:
+    for organizacao in organizacoes:
         if all(filtro(organizacao) for filtro in filtros):
             organizacoes_selecionadas.append(organizacao)
     return organizacoes_selecionadas, str_filtros
 
 
 if __name__ == '__main__':
-    cabecalho = 'Lista de Organizações:\nNome -- Unidade Federativa -- Cidade'
+    cabecalho = 'Lista de Organizações: Nome -- Unidade Federativa -- Cidade'
     inserir_organizacoes(OrganizacaoRating(
         nome='FIDE', unidade_federativa='MS', cidade='Dourados'))
     inserir_organizacoes(OrganizacaoRating(
