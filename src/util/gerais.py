@@ -1,7 +1,7 @@
 def mostrar_objeto(indice, objeto) -> None:
-    separador = '-'
+    separador = "-"
     ordem = indice + 1
-    frase = f'{ordem} {separador} {objeto}'
+    frase = f"{ordem} {separador} {objeto}"
     print(frase)
 
 
