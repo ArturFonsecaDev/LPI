@@ -45,7 +45,7 @@ class Jogador:
 # fim da classe
 
 
-jogadores = []
+jogadores = {}
 
 
 def obter_jogadores():
@@ -63,7 +63,10 @@ def inserir_jogador(jogador):
     A lista deve ser recuperada a partir da função obter_jogadores()
     :param jogador:
     """
-    jogadores.append(jogador)
+    if jogador.nome not in jogadores.keys():
+        jogadores[jogador.nome] = jogador
+        return
+    print("Jogador já existe com este nome!")
 
 
 def _filtrar_por_rating(jogador, rating_minimo):
@@ -164,7 +167,7 @@ def selecionar_jogadores(
         lambda jogador: _filtrar_por_titulo_fide(jogador, titulo_fide_min),
         lambda jogador: _filtrar_por_estrangeiro(jogador, estrangeiro),
     ]
-    for jogador in jogadores:
+    for jogador in jogadores.values():
         if all(filtro(jogador) for filtro in filtros):
             jogadores_selecionados.append(jogador)
     return jogadores_selecionados, str_filtros

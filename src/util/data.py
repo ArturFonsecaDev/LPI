@@ -52,6 +52,7 @@ class Data:
 
         return idade
 
+
 if __name__ == '__main__':
     data1 = Data(5, 4, 2024)
     print(data1)
